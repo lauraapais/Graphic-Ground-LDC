@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@200;400;700&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #D3D3D3;
+}
+
+span{
+    font-family: 'Sora', sans-serif;
+    font-weight: 200;
+    color:#1D1D1D;
+    text-transform: uppercase;
+    font-size: 1vw;
+}
+
+/*grelha*/
+.grid-container{
+    display: grid;
+    grid-template-columns: 5% 75% 10% 10%;
+    height: 100vh;
+    grid-template-rows: 7% 55% 15% 23%;
+}
+
+.grid-container_2{
+    display: grid;
+    grid-template-columns: 5% 17% 58% 10% 10%;
+    height: 100vh;
+    grid-template-rows: 7% 17% min-content;
+}
+
+.row{
+    border: 1px solid rgba(29, 29 , 29, 0.5) ;
+}
+
+/*index*/
+
+.title span{
+    font-weight: 700;
+    font-size: 25vh;
+    line-height: 90%;
+    margin-left: 4%;
+}
+
+.title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header span:hover{
+    font-size: 1.02vw;
+}
+
+.generative_materials{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.generative_materials span{
+    margin-right: 27%;
+    font-size: 1.2vw;
+}
+
+.generative_materials img{
+    height: 80%;
+    margin-right: 1%;
+}
+
+.create_materials{
+    grid-column-start: 3;
+    grid-column-end: 5;
+    display: flex;
+    align-items: center;
+}
+
+.create_materials .content{
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    align-items: flex-end;
+}
+
+.create_materials .content span{
+    vertical-align: bottom;
+    font-size: 1.1vw;
+}
+
+.create_materials .content img{
+    width: 45%;
+    margin-left: 1%;
+}
+
+.create_materials .content img:hover{
+    width: 45.5%;
+}
+
+a{
+    text-decoration: none;
+    color: #1D1D1D;
+}
+
+/*create*/
+.title_logo span{
+    font-weight: 700;
+    font-size: 3vw;
+    line-height: 90%;
+    margin: 5%;
+    text-align: center;
+}
+
+.title_logo span:hover{
+    font-size: 3.1vw;
+}
+
+.title_logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pag_atual{
+    font-weight: 500;
+}
+
+.row_container{
+    grid-column-start: 3;
+    grid-column-end: 6;
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
+
+.row_container_2{
+    grid-column-start: 3;
+    grid-column-end: 5;
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
+
+.inputs_poster{
+    margin-left: 5%;
+    margin-top:13%;
+    margin-bottom: 5%;
+}
+
+.content_poster{
+    margin-left: 5%;
+    margin-top:2vh;
+    border-bottom: #1D1D1D 1px solid;
+}
+
+.input{
+    margin-bottom: 3vh;
+}
+
+h3{
+    font-family: 'Sora', sans-serif;
+    font-weight: 300;
+    font-size: 1.7vh;
+    text-transform: uppercase;
+}
+
+
+h2{
+    font-family: 'Sora', sans-serif;
+    font-weight: 300;
+    font-size: 2.5vh;
+}
+
+input[type=text], select, textarea {
+    width: 95%;
+    padding: 8px 20px;
+    margin: 8px 0;
+    border: 1px solid #C5C2C2;
+    background-color: #C5C2C2;
+    color:#1D1D1D;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-size: 2vh;
+}
+
+textarea{
+    height:100px;
+    max-width: 95%;
+    min-width:95%;
+    min-height:45px;
+}
+
+.row_container{
+    height: fit-content;
+    min-height: calc(100% - 2px);
+}
+
+.image_input input {
+    opacity: 0;
+    height: 0;
+}
+
+.image_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.image_container label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 150%;
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+    border: solid 1px #1D1D1D;
+    border-radius: 5px;
+    object-fit: cover;
+    background-color:  #C5C2C2;
+    margin: 8px 0;
+}
+
+.image_container img {
+    width: 150px;
+    height: 150px;
+    border: solid 1px #1D1D1D;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.image_input h2{
+    margin-bottom: 1%;
+}
+
+button[type=submit] {
+    background-image: url(data/index/arrow_stroke.png);
+    background-size: 100px;
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 100px;
+    border: transparent;
+    background-color: transparent;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+button[type=submit]:hover {
+    background-size: 105px;
+    width: 105px;
+    height: 105px;
+}
+
+.inputs_poster{
+}
+
+#canvas_poster{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height:90vh;
+    position: sticky;
+    top:7vh;
+}
