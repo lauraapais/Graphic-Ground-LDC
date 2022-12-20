@@ -148,15 +148,23 @@ a{
 }
 
 .inputs_poster{
-    margin-left: 5%;
     margin-top:13%;
-    margin-bottom: 5%;
+    display: none;
+    margin-bottom: 3vh;
+    margin-left: 5%;
 }
 
-.content_poster{
-    margin-left: 5%;
+.content_poster, .equalizer{
     margin-top:2vh;
     border-bottom: #1D1D1D 1px solid;
+}
+.equalizerInputs{
+    display: none;
+}
+#equalizer{
+    margin-bottom: 1vh;
+    margin-left:1vw;
+    text-transform: uppercase;
 }
 
 .input{
@@ -178,7 +186,7 @@ h2{
 }
 
 input[type=text], select, textarea {
-    width: 95%;
+    width: 90%;
     padding: 8px 20px;
     margin: 8px 0;
     border: 1px solid #C5C2C2;
@@ -191,8 +199,8 @@ input[type=text], select, textarea {
 
 textarea{
     height:100px;
-    max-width: 95%;
-    min-width:95%;
+    max-width: 90%;
+    min-width: 90%;
     min-height:45px;
 }
 
@@ -218,7 +226,7 @@ textarea{
     align-items: center;
     font-size: 150%;
     cursor: pointer;
-    width: 150px;
+    width: 90%;
     height: 150px;
     border: solid 1px #1D1D1D;
     border-radius: 5px;
@@ -228,7 +236,7 @@ textarea{
 }
 
 .image_container img {
-    width: 150px;
+    width: 90%;
     height: 150px;
     border: solid 1px #1D1D1D;
     border-radius: 5px;
@@ -258,7 +266,11 @@ button[type=submit]:hover {
     height: 105px;
 }
 
-.inputs_poster{
+
+#content{
+    margin-bottom: 1vh;
+    margin-left:1vw;
+    text-transform: uppercase;
 }
 
 #canvas_poster{
