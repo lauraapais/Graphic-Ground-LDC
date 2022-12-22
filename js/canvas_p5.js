@@ -1,4 +1,3 @@
-var text1 = document.getElementsByName("text1")[0];
 var canvas_parent = document.getElementById("canvas_parent");
 
 var colorBackground;
@@ -10,8 +9,8 @@ var gridValues;
 
 var contentValue = {
     "title": {"columns": {"min": 7, "max": 10}, "size": {"proportion": 6, "relation": "column"}},
-    "subtitle": {"columns": {"min": 5, "max": 7}, "size": {"proportion": 8, "relation": "column"}},
-    "aditionalInfo": {"columns": {"min": 4, "max": 7}, "size": {"proportion": 5.5, "relation": "column"}},
+    "subtitle": {"columns": {"min": 5, "max": 7}, "size": {"proportion": 6, "relation": "column"}},
+    "aditionalInfo": {"columns": {"min": 5, "max": 5}, "size": {"proportion": 3, "relation": "column"}},
     "defaultColumn": 12
 };
 
@@ -29,6 +28,12 @@ inputLinhas.addEventListener("change", calcCanvas);
 var titleText = document.getElementById("title");
 titleText.addEventListener("change", titleLayout);
 
+var subtitleText = document.getElementById("subtitle");
+subtitleText.addEventListener("change", subtitleLayout);
+
+var aditionalInfoText = document.getElementById("aditionalInfo");
+aditionalInfoText.addEventListener("change", aditionalInfoLayout);
+
 function setup() {
     let panel = document.getElementById("canvas_poster");
 
@@ -43,6 +48,7 @@ function setup() {
     let poster = createCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
     poster.parent(panel);
     calcCanvas();
+
 }
 
 function draw() {
@@ -53,10 +59,7 @@ function draw() {
     noFill();
     rect(0,0, canvasValues.posterWidth, canvasValues.posterHeight);
     drawGrid(gridValues);
-    if(textInputs.title.content.text != null && textInputs.title.content.text != "") {
-        fill(255);
-        drawText(textInputs, gridValues);
-    }
+    drawText(textInputs, gridValues);
     pop();
 }
 
@@ -67,10 +70,12 @@ function windowResized(){
     var hPoster = 547.2;
 
     resizeCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
+
 }
 
 function formatText(txt, boxWidth, txtSize) {
-    console.log(txt, boxWidth, txtSize);
+    //console.log(txt, boxWidth, txtSize);
+
     textSize(txtSize);
     textLeading(txtSize*0.85);
 
@@ -161,33 +166,99 @@ function drawline(gridValues, columnStart, columnEnd, rowStart, rowEnd){ //1 - 2
 }
 
 function drawText(textInputs, gridValues){
-    textSize(textInputs.title.size);
-    textLeading(textInputs.title.content.leading);
-    text(textInputs.title.content.text,
-        gridValues.sizeColumn * (textInputs.title.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.title.columnStart-1),
-        gridValues.sizeRow * (textInputs.title.rowStart) + gridValues.gapRow * Math.max(0, textInputs.title.rowStart-1) + textInputs.title.size);
+    fill(255);
+    // ---- Title ----
+    if(textInputs.title.content.text != null && textInputs.title.content.text != "") {
+        textSize(textInputs.title.size);
+        textLeading(textInputs.title.content.leading);
+        text(textInputs.title.content.text,
+            gridValues.sizeColumn * (textInputs.title.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.title.columnStart - 1),
+            gridValues.sizeRow * (textInputs.title.rowStart) + gridValues.gapRow * Math.max(0, textInputs.title.rowStart - 1) + textInputs.title.size);
+    }
+    // ---- Sub-Title ----
+    if(textInputs.subtitle.content.text != null && textInputs.subtitle.content.text != "") {
+        textSize(textInputs.subtitle.size);
+        textLeading(textInputs.subtitle.content.leading);
+        text(textInputs.subtitle.content.text,
+            gridValues.sizeColumn * (textInputs.subtitle.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.subtitle.columnStart-1),
+            gridValues.sizeRow * (textInputs.subtitle.rowStart) + gridValues.gapRow * Math.max(0, textInputs.subtitle.rowStart-1) + textInputs.subtitle.size);
+
+    }
+
+    // ---- Info ----
+    if(textInputs.aditionalInfo.content.text != null && textInputs.aditionalInfo.content.text != "") {
+        textSize(textInputs.aditionalInfo.size);
+        textLeading(textInputs.aditionalInfo.content.leading);
+        text(textInputs.aditionalInfo.content.text,
+            gridValues.sizeColumn * (textInputs.aditionalInfo.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.aditionalInfo.columnStart - 1),
+            gridValues.sizeRow * (textInputs.aditionalInfo.rowStart) + gridValues.gapRow * Math.max(0, textInputs.aditionalInfo.rowStart - 1) + textInputs.aditionalInfo.size);
+    }
 }
 
 function titleLayout() {
-    var text = this.value;
+    var text = titleText.value;
 
     var nColumns = randInt(contentValue.title.columns.min, contentValue.title.columns.max);
     textInputs.title.size = nColumns * contentValue.title.size.proportion;
     textInputs.title.columnStart = randInt(0, inputColunas.value-nColumns);
     textInputs.title.columnEnd = textInputs.title.columnStart + nColumns;
 
-    console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
+    //console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
 
     textInputs.title.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.title.size)
 
-    var textHeight = (textInputs.title.content.nBreaks+1)*textInputs.title.size + textInputs.title.content.nBreaks*textInputs.title.content.leading;
+    var textHeight = (textInputs.title.content.nBreaks+1)*textInputs.title.size + textInputs.title.content.nBreaks*(1-textInputs.title.content.leading);
     var nRows = Math.round(textHeight/gridValues.sizeRow);
+
+    /*
+    console.log(Math.round(((textInputs.title.content.nBreaks+1)*textInputs.title.size) / gridValues.sizeRow));
+    console.log("Nº Rows: "+nRows, "Text Height: "+textHeight, "Nº Breaks: "+textInputs.title.content.nBreaks);
+    */
 
     textInputs.title.rowStart = randInt(0, inputLinhas.value-nRows);
     textInputs.title.rowEnd = textInputs.title.rowStart + nRows;
 
-    console.log(textInputs);
+    //console.log("Row Start: "+textInputs.title.rowStart, "Row End: "+textInputs.title.rowEnd);
 }
+
+function subtitleLayout() {
+    var text = subtitleText.value;
+
+    var nColumns = randInt(contentValue.subtitle.columns.min, contentValue.subtitle.columns.max);
+    textInputs.subtitle.size = nColumns * contentValue.subtitle.size.proportion;
+    textInputs.subtitle.columnStart = randInt(0, inputColunas.value-nColumns);
+    textInputs.subtitle.columnEnd = textInputs.subtitle.columnStart + nColumns;
+
+    console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
+
+    textInputs.subtitle.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.subtitle.size)
+
+    var textHeight = (textInputs.subtitle.content.nBreaks+1)*textInputs.subtitle.size + textInputs.subtitle.content.nBreaks*(1-textInputs.subtitle.content.leading);
+    var nRows = Math.round(textHeight/gridValues.sizeRow);
+
+    textInputs.subtitle.rowStart = randInt(0, inputLinhas.value-nRows);
+    textInputs.subtitle.rowEnd = textInputs.subtitle.rowStart + nRows;
+}
+
+function aditionalInfoLayout() {
+    var text = aditionalInfoText.value;
+
+    var nColumns = randInt(contentValue.aditionalInfo.columns.min, contentValue.aditionalInfo.columns.max);
+    textInputs.aditionalInfo.size = nColumns * contentValue.aditionalInfo.size.proportion;
+    textInputs.aditionalInfo.columnStart = randInt(0, inputColunas.value-nColumns);
+    textInputs.aditionalInfo.columnEnd = textInputs.aditionalInfo.columnStart + nColumns;
+
+    console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
+
+    textInputs.aditionalInfo.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.aditionalInfo.size)
+
+    var textHeight = (textInputs.aditionalInfo.content.nBreaks+1)*textInputs.aditionalInfo.size + textInputs.aditionalInfo.content.nBreaks*(1-textInputs.aditionalInfo.content.leading);
+    var nRows = Math.round(textHeight/gridValues.sizeRow);
+
+    textInputs.aditionalInfo.rowStart = randInt(0, inputLinhas.value-nRows);
+    textInputs.aditionalInfo.rowEnd = textInputs.aditionalInfo.rowStart + nRows;
+}
+
 
 function randInt(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;
