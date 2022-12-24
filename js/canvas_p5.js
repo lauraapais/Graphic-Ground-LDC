@@ -1,5 +1,4 @@
 var canvas_parent = document.getElementById("canvas_parent");
-
 var colorBackground;
 
 
@@ -7,9 +6,10 @@ var colorBackground;
 var canvasValues;
 var gridValues;
 
+
 var contentValue = {
-    "title": {"columns": {"min": 7, "max": 10}, "size": {"proportion": 6, "relation": "column"}},
-    "subtitle": {"columns": {"min": 5, "max": 7}, "size": {"proportion": 6, "relation": "column"}},
+    "title": {"columns": {"min": 7, "max": 12}, "size": {"proportion": 7, "relation": "column"}},
+    "subtitle": {"columns": {"min": 4, "max": 7}, "size": {"proportion": 6, "relation": "column"}},
     "aditionalInfo": {"columns": {"min": 5, "max": 5}, "size": {"proportion": 3, "relation": "column"}},
     "defaultColumn": 12
 };
@@ -42,8 +42,9 @@ function setup() {
     var wPoster = 297;
     var hPoster = 420;
 
-    colorBackground=color(randInt(0,255), randInt(0,255), randInt(0,255));
+    textFont('Roboto');
 
+    colorsChange();
 
     let poster = createCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
     poster.parent(panel);
@@ -53,14 +54,21 @@ function setup() {
 
 function draw() {
     background(colorBackground);
+    var showGridsButton = document.getElementById("checkboxGrid");
 
     push();
     translate(canvasValues.marginWidth, canvasValues.marginHeight);
-    noFill();
-    rect(0,0, canvasValues.posterWidth, canvasValues.posterHeight);
-    drawGrid(gridValues);
+
+    //show grids
+    if(showGridsButton.checked == true){
+        drawGrid(gridValues);
+    }
+    //texto
     drawText(textInputs, gridValues);
     pop();
+
+    var showGridsButton = document.getElementById("checkboxGrid");
+
 }
 
 function windowResized(){
@@ -77,7 +85,7 @@ function formatText(txt, boxWidth, txtSize) {
     //console.log(txt, boxWidth, txtSize);
 
     textSize(txtSize);
-    textLeading(txtSize*0.85);
+    textLeading(txtSize*1.02);
 
     var outputText = "";
     var currentText = "";
@@ -117,6 +125,8 @@ function formatText(txt, boxWidth, txtSize) {
     }
     return {"text": outputText, "nBreaks": nBreaks, "leading": textLeading()};
 }
+
+
 /* CALCULAR GRELHAS */
 
 function calcCanvas() {
@@ -146,6 +156,9 @@ function calcPoster(canvasWidth, canvasHeight, marginXScale, marginYScale) {
 }
 
 function drawGrid(gridValues) {
+    noFill();
+    rect(0,0, canvasValues.posterWidth, canvasValues.posterHeight);
+
     for(var i=1; i<=(gridValues.nColumns-1); i++) {
         line(gridValues.sizeColumn*i + gridValues.gapColumn*(i-1), 0, gridValues.sizeColumn*i + gridValues.gapColumn*(i-1), canvasValues.posterHeight);
         line(gridValues.sizeColumn*i + gridValues.gapColumn*i, 0, gridValues.sizeColumn*i + gridValues.gapColumn*i, canvasValues.posterHeight);
@@ -205,7 +218,7 @@ function titleLayout() {
 
     //console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
 
-    textInputs.title.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.title.size)
+    textInputs.title.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.title.size);
 
     var textHeight = (textInputs.title.content.nBreaks+1)*textInputs.title.size + textInputs.title.content.nBreaks*(1-textInputs.title.content.leading);
     var nRows = Math.round(textHeight/gridValues.sizeRow);

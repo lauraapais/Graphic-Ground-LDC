@@ -33,4 +33,3 @@ function drawArc(x, y, w, h, rot){
     noStroke();
     arc(x, y, w*2, h*2, HALF_PI*rot, HALF_PI*(rot+1));
 }
-}

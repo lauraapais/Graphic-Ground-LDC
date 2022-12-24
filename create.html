@@ -47,21 +47,28 @@
                 <form action="/url" method="GET">
                     <div class="input">
                         <h3>Text 1</h3>
-                        <input type="text" name="text1" id="title">
+                        <input type="text" name="text1" id="title" value="This is a title.">
                     </div>
                     <div class="input">
                         <h3>Text 2</h3>
-                        <input type="text" name="text2" id="subtitle">
+                        <input type="text" name="text2" id="subtitle" value="This can be used as a subtitle.">
                     </div>
 
                     <div class="input">
                         <h3><label for="add_info">Additional Information</label></h3>
                         <textarea placeholder="You can add some additional information here!" name="add_info"
-                                  id="aditionalInfo"></textarea>
+                                  id="aditionalInfo">And here you can add some additional information.</textarea>
                     </div>
 
                     <div class="input">
                         <label for="keywords"><h3>Keywords</h3></label>
+                        <select name="style" id="keywords">
+                            <option value="volvo">Manifesto</option>
+                            <option value="saab">Música</option>
+                            <option value="mercedes">Arte</option>
+                            <option value="audi">Cinema</option>
+                            <option value="audi">Design</option>
+                        </select>
                         <select name="style" id="keywords">
                             <option value="volvo">Manifesto</option>
                             <option value="saab">Música</option>
@@ -106,7 +113,14 @@
         </div>
 
         <div class="buttons">
-            <button id="buttonLayout" type="button">Randomize Layout</button>
+            <div class="checkbox">
+                <input id="checkboxGrid" type="checkbox" name="showGrids" value="Bike">
+                <label for="showGrids"><h3>Show Grids</h3></label><br>
+            </div>
+            <button class="botao" id="buttonLayout" type="button">Randomize Layout</button>
+            <button class="botao" id="buttonColors" type="button">Randomize Colors</button>
+            <button class="botao" id="buttonFont" type="button">Randomize Font</button>
+
         </div>
     </div>
 </div>
@@ -114,7 +128,6 @@
 <script src="js/image_input.js" type="text/javascript"></script>
 <script src="js/interact.js"></script>
 <script src="js/canvas_p5.js"></script>
-<script src="js/canvas_2.js"></script>
 <script src="js/pattern.js"></script>
 
 </body>
