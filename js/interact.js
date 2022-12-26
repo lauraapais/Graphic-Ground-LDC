@@ -39,18 +39,12 @@ function colorsChange(){
 //RANDOMIZE FONT
 var buttonFont= document.getElementById("buttonFont");
 buttonFont.addEventListener("click", fontChange);
+var currentFont=0;
 function fontChange(){
-    var randNum = randInt(1,5);
-    if(randNum==1) {
-        textFont('Roboto');
+    console.log("FONT CHANGING");
+    currentFont+=1;
+    if(currentFont==fonts.length){
+        currentFont=0
     }
-    else if(randNum==2){
-        textFont('Sora');
-    }
-    else if(randNum==3){
-        textFont('Poppins');
-    }
-    else if(randNum==4){
-        textFont('Bebas Neue');
-    }
+
 }

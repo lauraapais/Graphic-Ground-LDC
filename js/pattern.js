@@ -1,24 +1,51 @@
-var columns = 10, rows = 10;
-var rotation = Array.from(Array(rows) , () => new Array (columns));
-var colors = Array.from(Array(rows) , () => new Array (columns));
+var wt=30, ht=30;
+var blankSpace;
 
-var wt=50, ht=50;
+var currentPattern = 0; // ---- 1 = ARCS
 
+var patterns = {
+        "rotation": null,
+        "colors": null,
+        "columns": 0, "rows": 0};
 
-function patternSetup() {
-    for (var x = 0; x < rows; x++) {
-        for (var y = 0; y < rows; y++) {
-            rotation[x][y] = int(random(4));
+function setPatternSize(row, collumn) {
+    patterns.rows = row;
+    patterns.columns = collumn;
+
+    patterns.rotation = (Array.from(Array( patterns.rows) , () => new Array (patterns.columns)));
+    patterns.colors = (Array.from(Array( patterns.rows) , () => new Array (patterns.columns)));
+}
+
+function patternSetup(patternID, row, collumn) {
+    setPatternSize(row, collumn);
+    currentPattern = patternID;
+
+    // ---- ARC PATTERN CREATION ----
+    if(currentPattern == 1) {
+        for (var x = 0; x < patterns.rows; x++) {
+            for (var y = 0; y < patterns.rows; y++) {
+                patterns.rotation[x][y] = int(random(4));
+            }
         }
     }
 }
 
 
 function patternDraw() {
-    for(var x=0; x<rows; x++){
-        for(var y=0; y<rows; y++){
+    blankSpace=randInt(1,2);
+    if (currentPattern == 1) {
+        for (var x = 0; x < patterns.rows; x++) {
+            for (var y = 0; y < patterns.rows; y++) {
 
-            drawArc(x*wt, y*ht, wt, ht, rotation[x][y]);
+                if(blankSpace==1){
+                    drawArc(x * wt, y * ht, wt, ht, patterns.rotation[x][y]);
+                }
+                else if(blankSpace==2){
+                    rect(x*wt,y*wt, wt,ht);
+                }
+
+
+            }
         }
     }
 }

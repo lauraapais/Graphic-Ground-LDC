@@ -1,6 +1,6 @@
 var canvas_parent = document.getElementById("canvas_parent");
 var colorBackground;
-
+var fonts=[];
 
 /* GRID VALUES */
 var canvasValues;
@@ -33,6 +33,10 @@ subtitleText.addEventListener("change", subtitleLayout);
 
 var aditionalInfoText = document.getElementById("aditionalInfo");
 aditionalInfoText.addEventListener("change", aditionalInfoLayout);
+function preload(){
+    fonts.push(loadFont('data/fonts/Roboto-Bold.otf'),
+        loadFont('data/fonts/Roboto-Thin.otf'));
+}
 
 function setup() {
     let panel = document.getElementById("canvas_poster");
@@ -42,20 +46,19 @@ function setup() {
     var wPoster = 297;
     var hPoster = 420;
 
-    textFont('Roboto');
+
 
     colorsChange();
 
     let poster = createCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
     poster.parent(panel);
     calcCanvas();
-
+    patternSetup(1, 10, 10);
 }
+var showGridsButton = document.getElementById("checkboxGrid");
 
 function draw() {
     background(colorBackground);
-    var showGridsButton = document.getElementById("checkboxGrid");
-
     push();
     translate(canvasValues.marginWidth, canvasValues.marginHeight);
 
@@ -65,10 +68,9 @@ function draw() {
     }
     //texto
     drawText(textInputs, gridValues);
+
+    patternDraw();
     pop();
-
-    var showGridsButton = document.getElementById("checkboxGrid");
-
 }
 
 function windowResized(){
@@ -179,6 +181,7 @@ function drawline(gridValues, columnStart, columnEnd, rowStart, rowEnd){ //1 - 2
 }
 
 function drawText(textInputs, gridValues){
+    textFont(fonts[currentFont]);
     fill(255);
     // ---- Title ----
     if(textInputs.title.content.text != null && textInputs.title.content.text != "") {
