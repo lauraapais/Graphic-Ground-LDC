@@ -1,28 +1,36 @@
 var canvas_parent = document.getElementById("canvas_parent");
-var colorBackground;
+var checkboxDark = document.getElementById("checkboxDark");
+var colorBackground, colorPattern;
 var fonts=[];
+var img;
+var poster;
 
 /* GRID VALUES */
 var canvasValues;
 var gridValues;
+var nColunastmp=12, nLinhastmp=12;
+
 
 
 var contentValue = {
     "title": {"columns": {"min": 7, "max": 12}, "size": {"proportion": 7, "relation": "column"}},
     "subtitle": {"columns": {"min": 4, "max": 7}, "size": {"proportion": 6, "relation": "column"}},
     "aditionalInfo": {"columns": {"min": 5, "max": 5}, "size": {"proportion": 3, "relation": "column"}},
+    "pattern": {"columns": {"min": 4, "max": 9}, "rows": {"min": 4, "max": 9}},
     "defaultColumn": 12
 };
 
 var textInputs = {"title": {"content": {"text": null, "nBreaks": null}, "rowStart": null, "columnStart": null, "rowEnd": null, "columnEnd": null, "size": null},
     "subtitle": {"content": {"text": null, "nBreaks": null}, "rowStart": null, "columnStart": null, "rowEnd": null, "columnEnd": null, "size": null},
-    "aditionalInfo": {"content": {"text": null, "nBreaks": null}, "rowStart": null, "columnStart": null, "rowEnd": null, "columnEnd": null, "size": null}}
+    "aditionalInfo": {"content": {"text": null, "nBreaks": null}, "rowStart": null, "columnStart": null, "rowEnd": null, "columnEnd": null, "size": null},
+    "pattern": {"rowStart": null, "columnStart": null, "nRows": null, "nColumns": null}}
 
 /* INPUTS EQUALIZER */
-var inputColunas = document.getElementById("nColunas");
+/*var inputColunas = document.getElementById("nColunas");
 inputColunas.addEventListener("change", calcCanvas);
 var inputLinhas = document.getElementById("nLinhas");
-inputLinhas.addEventListener("change", calcCanvas);
+inputLinhas.addEventListener("change", calcCanvas);*/
+
 
 /* INPUT TEXT */
 var titleText = document.getElementById("title");
@@ -34,33 +42,45 @@ subtitleText.addEventListener("change", subtitleLayout);
 var aditionalInfoText = document.getElementById("aditionalInfo");
 aditionalInfoText.addEventListener("change", aditionalInfoLayout);
 function preload(){
-    fonts.push(loadFont('data/fonts/Roboto-Bold.otf'),
-        loadFont('data/fonts/Roboto-Thin.otf'));
+    fonts.push(
+        loadFont('data/fonts/Poppins-Medium.ttf'),
+        loadFont('data/fonts/AzeretMono-Bold.ttf'),
+        loadFont('data/fonts/FjallaOne-Regular.ttf'),
+        loadFont('data/fonts/OktaNeue-UltraLight.otf'),
+        loadFont('data/fonts/PlayfairDisplay-Bold.ttf')
+        );
 }
 
 function setup() {
     let panel = document.getElementById("canvas_poster");
+    colorMode(HSB);
+    textAlign(TOP, TOP);
 
     var scale = 0.35;
     var wDiv = canvas_parent.clientWidth;
     var wPoster = 297;
     var hPoster = 420;
 
-
-
     colorsChange();
 
-    let poster = createCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
+    poster = createCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
     poster.parent(panel);
     calcCanvas();
-    patternSetup(1, 10, 10);
+    layoutChange();
+    patternPositionChange();
 }
 var showGridsButton = document.getElementById("checkboxGrid");
 
 function draw() {
-    background(colorBackground);
+    background(0,0,10);
+
     push();
     translate(canvasValues.marginWidth, canvasValues.marginHeight);
+
+    patternDraw();
+    if(checkboxDark.checked == true){
+        filter(GRAY);
+    }
 
     //show grids
     if(showGridsButton.checked == true){
@@ -68,8 +88,6 @@ function draw() {
     }
     //texto
     drawText(textInputs, gridValues);
-
-    patternDraw();
     pop();
 }
 
@@ -84,7 +102,6 @@ function windowResized(){
 }
 
 function formatText(txt, boxWidth, txtSize) {
-    //console.log(txt, boxWidth, txtSize);
 
     textSize(txtSize);
     textLeading(txtSize*1.02);
@@ -94,12 +111,16 @@ function formatText(txt, boxWidth, txtSize) {
     var words = split(txt, ' ');
     var nBreaks = 0;
 
-    for(var i = 0; i<words.length; i++) {
-        if(textWidth(currentText+words[i])>boxWidth) {
+    for(var i = 0; i<words.length; i++) { // Roda todas as palavras
+        if(textWidth(currentText+words[i])>boxWidth) { // Verifica se o tamanho da linha atual + a palavra atual superou o tamanho da caixa
             if(textWidth(words[i]) > boxWidth * 0.8) {
-                for(var j = 0; j < words[i].length; j++) {
+                for(var j = 0; j < words[i].length; j++) { // Roda todas as letras
                     if(textWidth(currentText + words[i].charAt(j) + "-")>boxWidth) {
-                        outputText += "-\n"+words[i].charAt(j);
+                        if(j>0) {
+                            outputText += "-\n"+words[i].charAt(j);
+                        } else {
+                            outputText += "\n"+words[i].charAt(j);
+                        }
                         currentText = words[i].charAt(j);
                         nBreaks++;
                     } else {
@@ -132,9 +153,11 @@ function formatText(txt, boxWidth, txtSize) {
 /* CALCULAR GRELHAS */
 
 function calcCanvas() {
+    //inputColunas.value //// inputLinhas.value
+
     canvasValues = calcPoster(width, height, 0.1, 0.1);
-    gridValues = calcGrid(inputColunas.value, 0.1, canvasValues.posterWidth,
-        inputLinhas.value, 0.1, canvasValues.posterHeight);
+    gridValues = calcGrid(nColunastmp, 0.1, canvasValues.posterWidth,
+        nLinhastmp, 0.1, canvasValues.posterHeight);
 }
 
 function calcGrid(nColumns, columnGapScale, gridWidth, nRows, rowGapScale, gridHeight) {
@@ -159,6 +182,7 @@ function calcPoster(canvasWidth, canvasHeight, marginXScale, marginYScale) {
 
 function drawGrid(gridValues) {
     noFill();
+    stroke(0, 0, 90);
     rect(0,0, canvasValues.posterWidth, canvasValues.posterHeight);
 
     for(var i=1; i<=(gridValues.nColumns-1); i++) {
@@ -171,33 +195,25 @@ function drawGrid(gridValues) {
     }
 }
 
-function drawline(gridValues, columnStart, columnEnd, rowStart, rowEnd){ //1 - 2 - 1 - 2
-    stroke(255,0,0);
-
-    line(gridValues.sizeColumn * (columnStart-1) + gridValues.gapColumn * Math.max(0, columnStart-2),
-            gridValues.sizeRow * (rowStart-1) + gridValues.gapRow * Math.max(0, rowStart-2),
-            gridValues.sizeColumn * (columnEnd) + gridValues.gapColumn * Math.max(0, columnEnd-1),
-            gridValues.sizeRow * (rowEnd) + gridValues.gapRow * Math.max(0, rowEnd-1));
-}
-
 function drawText(textInputs, gridValues){
     textFont(fonts[currentFont]);
     fill(255);
+    noStroke();
     // ---- Title ----
     if(textInputs.title.content.text != null && textInputs.title.content.text != "") {
         textSize(textInputs.title.size);
         textLeading(textInputs.title.content.leading);
         text(textInputs.title.content.text,
-            gridValues.sizeColumn * (textInputs.title.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.title.columnStart - 1),
-            gridValues.sizeRow * (textInputs.title.rowStart) + gridValues.gapRow * Math.max(0, textInputs.title.rowStart - 1) + textInputs.title.size);
+            gridValues.sizeColumn * (textInputs.title.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.title.columnStart),
+            gridValues.sizeRow * (textInputs.title.rowStart) + gridValues.gapRow * Math.max(0, textInputs.title.rowStart) - textInputs.title.size/5);
     }
     // ---- Sub-Title ----
     if(textInputs.subtitle.content.text != null && textInputs.subtitle.content.text != "") {
         textSize(textInputs.subtitle.size);
         textLeading(textInputs.subtitle.content.leading);
         text(textInputs.subtitle.content.text,
-            gridValues.sizeColumn * (textInputs.subtitle.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.subtitle.columnStart-1),
-            gridValues.sizeRow * (textInputs.subtitle.rowStart) + gridValues.gapRow * Math.max(0, textInputs.subtitle.rowStart-1) + textInputs.subtitle.size);
+            gridValues.sizeColumn * (textInputs.subtitle.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.subtitle.columnStart),
+            gridValues.sizeRow * (textInputs.subtitle.rowStart) + gridValues.gapRow * Math.max(0, textInputs.subtitle.rowStart) - textInputs.subtitle.size/5);
 
     }
 
@@ -206,8 +222,8 @@ function drawText(textInputs, gridValues){
         textSize(textInputs.aditionalInfo.size);
         textLeading(textInputs.aditionalInfo.content.leading);
         text(textInputs.aditionalInfo.content.text,
-            gridValues.sizeColumn * (textInputs.aditionalInfo.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.aditionalInfo.columnStart - 1),
-            gridValues.sizeRow * (textInputs.aditionalInfo.rowStart) + gridValues.gapRow * Math.max(0, textInputs.aditionalInfo.rowStart - 1) + textInputs.aditionalInfo.size);
+            gridValues.sizeColumn * (textInputs.aditionalInfo.columnStart) + gridValues.gapColumn * Math.max(0, textInputs.aditionalInfo.columnStart),
+            gridValues.sizeRow * (textInputs.aditionalInfo.rowStart) + gridValues.gapRow * Math.max(0, textInputs.aditionalInfo.rowStart)  - textInputs.aditionalInfo.size/5);
     }
 }
 
@@ -216,25 +232,18 @@ function titleLayout() {
 
     var nColumns = randInt(contentValue.title.columns.min, contentValue.title.columns.max);
     textInputs.title.size = nColumns * contentValue.title.size.proportion;
-    textInputs.title.columnStart = randInt(0, inputColunas.value-nColumns);
+    textInputs.title.columnStart = randInt(0, nColunastmp-nColumns);
     textInputs.title.columnEnd = textInputs.title.columnStart + nColumns;
 
-    //console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
 
     textInputs.title.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.title.size);
 
     var textHeight = (textInputs.title.content.nBreaks+1)*textInputs.title.size + textInputs.title.content.nBreaks*(1-textInputs.title.content.leading);
     var nRows = Math.round(textHeight/gridValues.sizeRow);
 
-    /*
-    console.log(Math.round(((textInputs.title.content.nBreaks+1)*textInputs.title.size) / gridValues.sizeRow));
-    console.log("Nº Rows: "+nRows, "Text Height: "+textHeight, "Nº Breaks: "+textInputs.title.content.nBreaks);
-    */
 
-    textInputs.title.rowStart = randInt(0, inputLinhas.value-nRows);
+    textInputs.title.rowStart = randInt(0, nLinhastmp-nRows);
     textInputs.title.rowEnd = textInputs.title.rowStart + nRows;
-
-    //console.log("Row Start: "+textInputs.title.rowStart, "Row End: "+textInputs.title.rowEnd);
 }
 
 function subtitleLayout() {
@@ -242,17 +251,15 @@ function subtitleLayout() {
 
     var nColumns = randInt(contentValue.subtitle.columns.min, contentValue.subtitle.columns.max);
     textInputs.subtitle.size = nColumns * contentValue.subtitle.size.proportion;
-    textInputs.subtitle.columnStart = randInt(0, inputColunas.value-nColumns);
+    textInputs.subtitle.columnStart = randInt(0, nColunastmp-nColumns);
     textInputs.subtitle.columnEnd = textInputs.subtitle.columnStart + nColumns;
-
-    console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
 
     textInputs.subtitle.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.subtitle.size)
 
     var textHeight = (textInputs.subtitle.content.nBreaks+1)*textInputs.subtitle.size + textInputs.subtitle.content.nBreaks*(1-textInputs.subtitle.content.leading);
     var nRows = Math.round(textHeight/gridValues.sizeRow);
 
-    textInputs.subtitle.rowStart = randInt(0, inputLinhas.value-nRows);
+    textInputs.subtitle.rowStart = randInt(0, nLinhastmp-nRows);
     textInputs.subtitle.rowEnd = textInputs.subtitle.rowStart + nRows;
 }
 
@@ -261,20 +268,25 @@ function aditionalInfoLayout() {
 
     var nColumns = randInt(contentValue.aditionalInfo.columns.min, contentValue.aditionalInfo.columns.max);
     textInputs.aditionalInfo.size = nColumns * contentValue.aditionalInfo.size.proportion;
-    textInputs.aditionalInfo.columnStart = randInt(0, inputColunas.value-nColumns);
+    textInputs.aditionalInfo.columnStart = randInt(0, nColunastmp-nColumns);
     textInputs.aditionalInfo.columnEnd = textInputs.aditionalInfo.columnStart + nColumns;
-
-    console.log(nColumns, gridValues.sizeColumn, gridValues.gapColumn);
 
     textInputs.aditionalInfo.content = formatText(text, nColumns*gridValues.sizeColumn+(nColumns-1)*gridValues.gapColumn, textInputs.aditionalInfo.size)
 
     var textHeight = (textInputs.aditionalInfo.content.nBreaks+1)*textInputs.aditionalInfo.size + textInputs.aditionalInfo.content.nBreaks*(1-textInputs.aditionalInfo.content.leading);
     var nRows = Math.round(textHeight/gridValues.sizeRow);
 
-    textInputs.aditionalInfo.rowStart = randInt(0, inputLinhas.value-nRows);
+    textInputs.aditionalInfo.rowStart = randInt(0, nLinhastmp-nRows);
     textInputs.aditionalInfo.rowEnd = textInputs.aditionalInfo.rowStart + nRows;
 }
 
+function patternLayout(){
+    textInputs.pattern.nColumns = randInt(contentValue.pattern.columns.min, contentValue.pattern.columns.max);
+    textInputs.pattern.nRows = randInt(contentValue.pattern.rows.min, contentValue.pattern.rows.max);
+    textInputs.pattern.columnStart = randInt(0, contentValue.defaultColumn - textInputs.pattern.nColumns);
+    textInputs.pattern.rowStart = randInt(0, contentValue.defaultColumn - textInputs.pattern.nRows);
+    patternChange();
+}
 
 function randInt(min, max) {
     return Math.floor(Math.random() * (max - min) ) + min;

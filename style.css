@@ -29,12 +29,13 @@ span{
     display: grid;
     grid-template-columns: 5% 17% 58% 10% 10%;
     height: 100vh;
-    grid-template-rows: 7% 17% min-content;
+    grid-template-rows: 7% 17% auto;
 }
 
 .row{
     border: 1px solid rgba(29, 29 , 29, 0.5) ;
 }
+
 
 /*index*/
 
@@ -135,7 +136,7 @@ a{
 
 .row_container{
     grid-column-start: 3;
-    grid-column-end: 6;
+    grid-column-end: 5;
     grid-row-start: 2;
     grid-row-end: 4;
 }
@@ -147,17 +148,30 @@ a{
     grid-row-end: 4;
 }
 
+.row_outputs{
+    grid-column-start: 5;
+    grid-column-end: 6;
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
+
+.row_outputs div{
+    position: absolute;
+    bottom: 3vh;
+    text-align: center;
+}
+
 .inputs_poster{
     margin-top:13%;
     display: none;
     margin-bottom: 3vh;
     margin-left: 5%;
+    margin-right: 5%;
 }
 
 .content_poster, .equalizer{
-    margin-top:2vh;
+    padding-top:2vh;
     border-bottom: #1D1D1D 1px solid;
-    align-text:center;
 }
 .equalizerInputs{
     display: none;
@@ -174,6 +188,10 @@ a{
 
 #equalizer{
     margin-bottom: 1vh;
+    cursor:pointer;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .equalizer_slides{
@@ -201,7 +219,7 @@ h2{
 input[type=text], select, textarea {
     font-family: 'Sora';
     font-weight: lighter;
-    width: 90%;
+    width: 100%;
     padding: 8px 20px;
     margin: 8px 0;
     border: 1px solid #C5C2C2;
@@ -214,8 +232,8 @@ input[type=text], select, textarea {
 
 textarea{
     height:100px;
-    max-width: 90%;
-    min-width: 90%;
+    max-width: 100%;
+    min-width: 100%;
     min-height:45px;
 }
 
@@ -251,7 +269,7 @@ textarea{
 }
 
 .image_container img {
-    width: 90%;
+    width:90%;
     height: 150px;
     border: solid 1px #1D1D1D;
     border-radius: 5px;
@@ -284,6 +302,10 @@ button[type=submit]:hover {
 
 #content{
     margin-bottom: 1vh;
+    cursor:pointer;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #canvas_poster{
@@ -306,16 +328,21 @@ button[type=submit]:hover {
     border-radius: 10px;
     box-sizing: border-box;
     font-size: 2vh;
+    margin-top: 1vh;
 }
 
 .botao:hover{
     background-color: #A1A1A1;
+    cursor: pointer;
 }
 
 .buttons{
-    margin-top: 5vh;
-    margin-bottom: 3vh;
     text-align: center;
+}
+
+.buttons > div {
+    padding-top: 5vh;
+    padding-bottom: 3vh;
 }
 
 .checkbox{
