@@ -4,6 +4,7 @@ var colorBackground, colorPattern;
 var fonts=[];
 var img;
 var poster;
+var pdf;
 
 /* GRID VALUES */
 var canvasValues;
@@ -13,9 +14,9 @@ var nColunastmp=12, nLinhastmp=12;
 
 
 var contentValue = {
-    "title": {"columns": {"min": 7, "max": 12}, "size": {"proportion": 7, "relation": "column"}},
-    "subtitle": {"columns": {"min": 4, "max": 7}, "size": {"proportion": 6, "relation": "column"}},
-    "aditionalInfo": {"columns": {"min": 5, "max": 5}, "size": {"proportion": 3, "relation": "column"}},
+    "title": {"columns": {"min": 9, "max": 11}, "size": {"proportion": 4.6, "relation": "column"}},
+    "subtitle": {"columns": {"min": 7, "max": 9}, "size": {"proportion": 3, "relation": "column"}},
+    "aditionalInfo": {"columns": {"min": 5, "max": 5}, "size": {"proportion": 2.5, "relation": "column"}},
     "pattern": {"columns": {"min": 4, "max": 9}, "rows": {"min": 4, "max": 9}},
     "defaultColumn": 12
 };
@@ -44,7 +45,6 @@ aditionalInfoText.addEventListener("change", aditionalInfoLayout);
 function preload(){
     fonts.push(
         loadFont('data/fonts/Poppins-Medium.ttf'),
-        loadFont('data/fonts/AzeretMono-Bold.ttf'),
         loadFont('data/fonts/FjallaOne-Regular.ttf'),
         loadFont('data/fonts/OktaNeue-UltraLight.otf'),
         loadFont('data/fonts/PlayfairDisplay-Bold.ttf')
@@ -68,6 +68,9 @@ function setup() {
     calcCanvas();
     layoutChange();
     patternPositionChange();
+
+    pdf = createPDF();
+    pdf.beginRecord();
 }
 var showGridsButton = document.getElementById("checkboxGrid");
 
@@ -102,7 +105,7 @@ function windowResized(){
 }
 
 function formatText(txt, boxWidth, txtSize) {
-
+    textFont(fonts[currentFont]);
     textSize(txtSize);
     textLeading(txtSize*1.02);
 
@@ -112,6 +115,7 @@ function formatText(txt, boxWidth, txtSize) {
     var nBreaks = 0;
 
     for(var i = 0; i<words.length; i++) { // Roda todas as palavras
+        if(words[i] == "\n") console.log("TA AQUI UM ENTER!")
         if(textWidth(currentText+words[i])>boxWidth) { // Verifica se o tamanho da linha atual + a palavra atual superou o tamanho da caixa
             if(textWidth(words[i]) > boxWidth * 0.8) {
                 for(var j = 0; j < words[i].length; j++) { // Roda todas as letras
