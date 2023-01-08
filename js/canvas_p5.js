@@ -11,8 +11,6 @@ var canvasValues;
 var gridValues;
 var nColunastmp=12, nLinhastmp=12;
 
-
-
 var contentValue = {
     "title": {"columns": {"min": 9, "max": 11}, "size": {"proportion": 4.6, "relation": "column"}},
     "subtitle": {"columns": {"min": 7, "max": 9}, "size": {"proportion": 3, "relation": "column"}},
@@ -54,24 +52,31 @@ function preload(){
 function setup() {
     let panel = document.getElementById("canvas_poster");
     colorMode(HSB);
-    textAlign(TOP, TOP);
+    textAlign(LEFT, TOP);
 
-    var scale = 0.35;
-    var wDiv = canvas_parent.clientWidth;
-    var wPoster = 297;
-    var hPoster = 420;
+
+    var v = windowSize()
 
     colorsChange();
-
-    poster = createCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
+    poster = createCanvas(v.x, v.y);
     poster.parent(panel);
+
     calcCanvas();
     layoutChange();
     patternPositionChange();
 
     pdf = createPDF();
-    pdf.beginRecord();
 }
+
+function windowSize(){
+    var scale = 0.35;
+    var wDiv = canvas_parent.clientWidth;
+    var wPoster = 297;
+    var hPoster = 420;
+
+    return createVector(wDiv * scale, hPoster * wDiv * scale / wPoster);
+}
+
 var showGridsButton = document.getElementById("checkboxGrid");
 
 function draw() {
@@ -92,16 +97,27 @@ function draw() {
     //texto
     drawText(textInputs, gridValues);
     pop();
+
+    if(pdfSave) {
+        pdfSave=false;
+        pdf.endRecord();
+        pdf.save();
+    }
+}
+
+var pdfSave = false;
+
+var buttonSavePDF= document.getElementById("savePDF");
+buttonSavePDF.addEventListener("click", savePDF);
+
+function savePDF() {
+    pdfSave=true;
+    pdf.beginRecord();
 }
 
 function windowResized(){
-    var scale = 0.3;
-    var wDiv = canvas_parent.clientWidth;
-    var wPoster = 394.8;
-    var hPoster = 547.2;
-
-    resizeCanvas(wDiv * scale, hPoster * wDiv * scale / wPoster);
-
+    var v = windowSize()
+    resizeCanvas(v.x, v.y);
 }
 
 function formatText(txt, boxWidth, txtSize) {

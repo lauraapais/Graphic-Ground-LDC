@@ -7,6 +7,7 @@ window.onload = (event) => {
 };
 
 function setInputSize() {
-    var total = window.innerHeight*(100-17-7)/100;
+    var total = window.innerHeight*(100-17-8)/100;
     inputSpacer.style.height = Math.max(total - inputUpper.offsetHeight - inputBottom.offsetHeight, 0)+"px";
+    return "RESIZED";
 }

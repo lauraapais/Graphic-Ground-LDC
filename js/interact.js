@@ -115,10 +115,3 @@ buttonSavePNG.addEventListener("click", savePNG);
 function savePNG() {
     saveCanvas(poster, 'GraphicGround', 'png');
 }
-
-var buttonSavePDF= document.getElementById("savePDF");
-buttonSavePDF.addEventListener("click", savePDF);
-function savePDF() {
-    noLoop();
-    pdf.save();
-}
